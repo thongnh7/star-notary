@@ -1,4 +1,4 @@
-pragma solidity >=0.4.24;
+pragma solidity >=0.6.10;
 
 //Importing openzeppelin-solidity ERC-721 implemented Standard
 import "../node_modules/openzeppelin-solidity/contracts/token/ERC721/ERC721.sol";
@@ -52,7 +52,7 @@ contract StarNotary is ERC721 {
         address ownerAddress = ownerOf(_tokenId);
         require(msg.value > starCost, "You need to have enough Ether");
         // solc compiler v0.6.12 only has transferFrom() function
-        transferFrom(ownerAddress, msg.sender, _tokenId); 
+        _transfer(ownerAddress, msg.sender, _tokenId); 
         //_transferFrom(ownerAddress, msg.sender, _tokenId); // We can't use _addTokenTo or_removeTokenFrom functions, now we have to use _transferFrom
         address payable ownerAddressPayable = _make_payable(ownerAddress); // We need to make this conversion to be able to use transfer() function to transfer ethers
         ownerAddressPayable.transfer(starCost);
@@ -78,8 +78,8 @@ contract StarNotary is ERC721 {
         address ownerAddress2 = ownerOf(_tokenId2);
 
         //4. Use _transferFrom function to exchange the tokens.
-        transferFrom(ownerAddress1, ownerAddress2, _tokenId1);
-        transferFrom(ownerAddress2, ownerAddress1, _tokenId2);
+        _transfer(ownerAddress1, ownerAddress2, _tokenId1);
+        _transfer(ownerAddress2, ownerAddress1, _tokenId2);
     }
 
     // Implement Task 1 Transfer Stars
@@ -87,7 +87,7 @@ contract StarNotary is ERC721 {
         //1. Check if the sender is the ownerOf(_tokenId)
         require(msg.sender == ownerOf(_tokenId), "You can't transfer the Star you don't owned");
         //2. Use the transferFrom(from, to, tokenId); function to transfer the Star
-        transferFrom(msg.sender, _to1, _tokenId);
+        _transfer(msg.sender, _to1, _tokenId);
     }
 
 }
